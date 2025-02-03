@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: place-review
+  mvc:
+    hiddenmethod:
+      filter:
+        enable: true # form에서 put, patch, delete 등을 사용할 수 있게 만들어줍니다
