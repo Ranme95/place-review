@@ -3,13 +3,13 @@ spring:
   datasource:
     # MySQL 설정
     driver-class-name: com.mysql.cj.jdbc.Driver # Mysql 드라이버
-    url: jdbc:mysql://127.0.0.1:3306/simpmall # Mysql DB 주소
+    url: jdbc:mysql://127.0.0.1:3306/review # Mysql DB 주소
     username: root # DB 계정 이름
-    password: admin # DB 계정 패스워드
+    password: 1234 # DB 계정 패스워드
 
   jpa:
     hibernate:
-      ddl-auto: create #create, update, validate, none
+      ddl-auto: validate #create, update, validate, none
     show-sql: true
     database-platform: org.hibernate.dialect.MySQLDialect # MYSQL 방언
 
