@@ -9,5 +9,5 @@ public interface MemberModule {
 
     public void deleteById(Long memberId);
 
-    public Optional<Member> update(Long memberId, String nickname);
+    public Member update(Long memberId, String nickname);
 }

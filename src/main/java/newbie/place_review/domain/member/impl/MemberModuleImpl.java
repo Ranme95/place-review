@@ -1,9 +1,11 @@
 package newbie.place_review.domain.member.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import newbie.place_review.domain.member.Member;
 import newbie.place_review.domain.member.MemberModule;
 import newbie.place_review.domain.member.MemberRepository;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,32 +19,38 @@ public class MemberModuleImpl implements MemberModule {
     private final MemberRepository memberRepository;
 
     @Override
-    public Member save(String email, String nickname) {
+    public Member save(@NonNull String email, @NonNull String nickname) {
         Member member = Member.builder()
-                .email(email)
-                .nickName(nickname)
-                .build();
+                              .email(email)
+                              .nickname(nickname)
+                              .build();
 
         return memberRepository.save(member);
     }
 
     @Override
-    public void deleteById(Long memberId) {
-        memberRepository.deleteById(memberId);
+    public void deleteById(@NonNull Long memberId) {
+
+        Optional<Member> optMember = memberRepository.findById(memberId);
+
+        optMember.ifPresentOrElse(memberRepository::delete,
+                () -> {
+                    throw new DataRetrievalFailureException("삭제할 회원을 찾을 수 없습니다.");
+                });
     }
 
     @Override
-    public Optional<Member> update(Long memberId, String nickname) {
+    public Member update(@NonNull Long memberId, @NonNull String nickname) {
 
         return memberRepository.findById(memberId).map(member -> {
-            member.setNickName(nickname);
+            member.setNickname(nickname);
 
             return member;
-        });
+        }).orElseThrow(() -> new DataRetrievalFailureException("수정할 회원을 찾을 수 없습니다."));
     }
 
     @Override
-    public Optional<Member> getById(Long memberId) {
+    public Optional<Member> getById(@NonNull Long memberId) {
         return memberRepository.findById(memberId);
     }
 }

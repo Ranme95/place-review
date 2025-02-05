@@ -22,6 +22,6 @@ public class Member {
     private String email;
 
     @Column(nullable = false)
-    private String nickName;
+    private String nickname;
 
 }
