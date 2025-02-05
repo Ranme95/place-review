@@ -12,5 +12,5 @@ public interface ReviewModule {
 
     public void deleteByNonmember(Long reviewId, String password);
 
-    public Optional<Review> updateByNonmember(Long reviewId, String currentPassword, String content, Integer rate, String newPassword);
+    public Review updateByNonmember(Long reviewId, String currentPassword, String content, Integer rate, String newPassword);
 }
