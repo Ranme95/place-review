@@ -5,13 +5,10 @@ import lombok.*;
 import newbie.place_review.common.BaseTime;
 import org.hibernate.annotations.Comment;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@Builder
-@Table(name = "place")
 @Data
 @Entity
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Place extends BaseTime {
 
     @Id
@@ -31,4 +28,11 @@ public class Place extends BaseTime {
     @Column(nullable = false)
     @Comment("좌표")
     private Coordinates coordinates;
+
+    @Builder
+    public Place(String address, String placeName, Coordinates coordinates) {
+        this.address = address;
+        this.placeName = placeName;
+        this.coordinates = coordinates;
+    }
 }

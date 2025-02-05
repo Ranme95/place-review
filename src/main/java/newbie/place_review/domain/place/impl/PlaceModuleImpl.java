@@ -1,10 +1,12 @@
 package newbie.place_review.domain.place.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import newbie.place_review.domain.place.Coordinates;
 import newbie.place_review.domain.place.Place;
 import newbie.place_review.domain.place.PlaceModule;
 import newbie.place_review.domain.place.PlaceRepository;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,12 @@ public class PlaceModuleImpl implements PlaceModule {
     private final PlaceRepository placeRepository;
 
     @Override
-    public Place save(String address, String placeName, Double latitude, Double longitude) {
+    public Place save(
+            @NonNull String address,
+            @NonNull String placeName,
+            @NonNull Double latitude,
+            @NonNull Double longitude
+    ) {
 
         Coordinates coordinates = Coordinates.builder()
                                              .longitude(longitude)
@@ -42,10 +49,22 @@ public class PlaceModuleImpl implements PlaceModule {
 
     @Override
     public void deleteById(Long placeId) {
+        placeRepository.findById(placeId).ifPresentOrElse(
+                placeRepository::delete,
+                () -> {
+                    throw new DataRetrievalFailureException("삭제 할 장소를 찾지 못하였습니다.");
+                }
+        );
     }
 
     @Override
-    public Optional<Place> update(Long placeId, String address, String placeName, Double latitude, Double longitude) {
+    public Place update(
+            @NonNull Long placeId,
+            @NonNull String address,
+            @NonNull String placeName,
+            @NonNull Double latitude,
+            @NonNull Double longitude
+    ) {
 
         return placeRepository.findById(placeId).map(place -> {
             place.setAddress(address);
@@ -57,6 +76,6 @@ public class PlaceModuleImpl implements PlaceModule {
             coordinates.setLongitude(longitude);
 
             return place;
-        });
+        }).orElseThrow(() -> new DataRetrievalFailureException("수정 할 장소를 찾지 못하였습니다."));
     }
 }

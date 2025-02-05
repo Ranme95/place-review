@@ -10,5 +10,5 @@ public interface PlaceModule {
 
     public void deleteById(Long placeId);
 
-    public Optional<Place> update(Long placeId, String address, String placeName, Double latitude, Double longitude);
+    public Place update(Long placeId, String address, String placeName, Double latitude, Double longitude);
 }
