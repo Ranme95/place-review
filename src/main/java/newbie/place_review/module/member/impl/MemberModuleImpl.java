@@ -1,0 +1,56 @@
+package newbie.place_review.module.member.impl;
+
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import newbie.place_review.module.member.Member;
+import newbie.place_review.module.member.MemberModule;
+import newbie.place_review.module.member.MemberRepository;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class MemberModuleImpl implements MemberModule {
+
+    private final MemberRepository memberRepository;
+
+    @Override
+    public Member save(@NonNull String email, @NonNull String nickname) {
+        Member member = Member.builder()
+                              .email(email)
+                              .nickname(nickname)
+                              .build();
+
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public void deleteById(@NonNull Long memberId) {
+
+        Optional<Member> optMember = memberRepository.findById(memberId);
+
+        optMember.ifPresentOrElse(memberRepository::delete,
+                () -> {
+                    throw new DataRetrievalFailureException("삭제할 회원을 찾을 수 없습니다.");
+                });
+    }
+
+    @Override
+    public Member update(@NonNull Long memberId, @NonNull String nickname) {
+
+        return memberRepository.findById(memberId).map(member -> {
+            member.setNickname(nickname);
+
+            return member;
+        }).orElseThrow(() -> new DataRetrievalFailureException("수정할 회원을 찾을 수 없습니다."));
+    }
+
+    @Override
+    public Optional<Member> getById(@NonNull Long memberId) {
+        return memberRepository.findById(memberId);
+    }
+}
