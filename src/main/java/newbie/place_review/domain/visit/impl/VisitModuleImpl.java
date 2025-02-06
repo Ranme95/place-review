@@ -1,5 +1,6 @@
 package newbie.place_review.domain.visit.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import newbie.place_review.domain.comment.Comments;
 import newbie.place_review.domain.place.Place;
@@ -21,8 +22,7 @@ public class VisitModuleImpl implements VisitModule {
     private final VisitRepository visitRepository;
 
     @Override
-    public Visit save(Place place, Long visitCount, LocalDateTime date) {
-
+    public Visit save(@NonNull Place place,@NonNull Long visitCount,@NonNull LocalDateTime date) {
         Visit visit = Visit.builder()
                            .date(date)
                            .visitCount(visitCount)
@@ -33,31 +33,15 @@ public class VisitModuleImpl implements VisitModule {
     }
 
     @Override
-    public Optional<Visit> getById(Long visitId) {
+    public Optional<Visit> getById(@NonNull Long visitId) {
         return visitRepository.findById(visitId);
     }
 
     @Override
-    public void deleteById(Long visitId) {
-        Optional<Visit> optionalVisit = visitRepository.findById(visitId);
-
-        if (optionalVisit.isEmpty()) throw new DataRetrievalFailureException("방문이 없음");
-
-        visitRepository.deleteById(visitId);
-    }
-
-    @Override
-    public Visit update(Long visitId, Place place, Long visitCount, LocalDateTime date) {
-        Optional<Visit> optionalVisit = visitRepository.findById(visitId);
-
-        if (optionalVisit.isEmpty()) throw new DataRetrievalFailureException("방문이 없음");
-
-        Visit visit = optionalVisit.get();
-
-        visit.setVisitCount(visitCount);
-        visit.setDate(date);
-        visit.setPlace(place);
-
-        return visitRepository.save(visit);
+    public Visit update(@NonNull Long visitId, @NonNull Long visitCount){
+       return getById(visitId).map((visit)->{
+            visit.setVisitCount(visitCount);
+            return visit;
+        }).orElseThrow(()->new DataRetrievalFailureException("찾는 방문이 없습니다."));
     }
 }

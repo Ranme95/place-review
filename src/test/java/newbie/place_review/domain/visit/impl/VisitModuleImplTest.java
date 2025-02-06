@@ -1,15 +1,19 @@
 package newbie.place_review.domain.visit.impl;
 
+import jakarta.annotation.Nullable;
+import net.bytebuddy.utility.dispatcher.JavaDispatcher;
 import newbie.place_review.domain.place.Coordinates;
 import newbie.place_review.domain.place.Place;
 import newbie.place_review.domain.visit.Visit;
 import newbie.place_review.domain.visit.VisitRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataRetrievalFailureException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -19,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("VisitModuleImplTest 테스트")
 class VisitModuleImplTest {
 
     @Mock
@@ -28,43 +33,71 @@ class VisitModuleImplTest {
     private VisitModuleImpl visitModule;
 
     @Test
-    void save() {
+    @DisplayName("방문 저장")
+    void try_to_save_a_visit() {
         //Given
         Visit visit = mock(Visit.class);
         Place place = mock(Place.class);
-
-        //When
         when(visitRepository.save(any(Visit.class))).thenReturn(visit);
 
+        //When
         //Then
         assertEquals(visit, visitModule.save(place, 1L, LocalDateTime.now()));
 
     }
 
     @Test
-    void getById(){
+    @DisplayName("잘못된 방문 아이디로 방문 조회")
+    void find_by_wrong_visit_id() {
         //Given
-        Visit visit = mock(Visit.class);
+        when(visitRepository.findById(2L)).thenReturn(Optional.empty());
 
         //When
-        when(visitRepository.findById(1L)).thenReturn(Optional.ofNullable(visit));
+        Optional<Visit> optVisit = visitModule.getById(2L);
 
         //Then
-        assertEquals(visit,visitModule.getById(1L).orElse(null));
-
+        assertNull(optVisit.orElse(null));
     }
 
     @Test
-    void update(){
+    @DisplayName("정확한 방문 아이디로 방문 조회")
+    void find_by_correct_visit_id() {
         //Given
         Visit visit = mock(Visit.class);
-        Place place = mock(Place.class);
+        when(visitRepository.findById(1L)).thenReturn(Optional.ofNullable(visit));
 
         //When
-        when(visitRepository.findById(1L)).thenReturn(Optional.ofNullable(visit));
-        when(visitRepository.save(any(Visit.class))).thenReturn(visit);
-
         //Then
-        assertEquals(visit,visitModule.update(1L,place,5L,LocalDateTime.now()));
+        assertEquals(visit, visitModule.getById(1L).orElse(null));
+    }
+
+    @Test
+    @DisplayName("잘못된 방문 아이디로 업데이트 시도")
+    void try_to_update_with_wrong_visit_id() {
+        //Given
+        when(visitRepository.findById(2L)).thenReturn(Optional.empty());
+
+        //When
+        //Then
+        assertThrows(DataRetrievalFailureException.class, () -> visitModule.update(2L, 4L));
+    }
+
+    @Test
+    @DisplayName("정확한 방문 아이디로 업데이트 시도")
+    void try_to_update_with_correct_visit_id() {
+        //Given
+        Visit visit = Visit.builder()
+                           .place(mock(Place.class))
+                           .visitCount(1L)
+                           .date(LocalDateTime.now())
+                           .build();
+
+        visit.setId(1L);
+
+        when(visitRepository.findById(1L)).thenReturn(Optional.of(visit));
+
+        //When
+        //Then
+        assertEquals(2L,visitModule.update(1L,2L).getVisitCount());
     }
 }

@@ -11,7 +11,6 @@ public interface VisitModule {
 
     public Optional<Visit> getById(Long visitId);
 
-    public void deleteById(Long visitId);
+    public Visit update(Long visitId,Long visitCount);
 
-    public Visit update(Long visitId, Place place, Long visitCount, LocalDateTime date);
 }
