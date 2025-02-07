@@ -53,9 +53,7 @@ class ReviewModuleImplTest {
                               .password("기존 비밀번호")
                               .build();
 
-        review.setId(1L);
 
-        
         when(reviewRepository.findById(1L)).thenReturn(Optional.of(review));
 
         // When
@@ -78,8 +76,6 @@ class ReviewModuleImplTest {
                               .content("기존 테스트 내용")
                               .password("기존 비밀번호")
                               .build();
-
-        review.setId(1L);
 
         when(reviewRepository.findById(1L)).thenReturn(Optional.of(review));
 

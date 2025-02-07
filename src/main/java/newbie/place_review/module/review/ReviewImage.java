@@ -6,26 +6,36 @@ import newbie.place_review.common.BaseTime;
 import newbie.place_review.module.place.Place;
 
 @Entity
-@Data
-@Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ReviewImage extends BaseTime {
 
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_image_id")
+    @Column(name = "review_image_id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "place_id", nullable = false)
+    @JoinColumn(name = "place_id", nullable = false, updatable = false)
     private Place place;
 
+
     @ManyToOne
-    @JoinColumn(name = "review_id", nullable = false)
+    @JoinColumn(name = "review_id", nullable = false, updatable = false)
     private Review review;
+
+
+    @Column(nullable = false, updatable = false)
+    private String name;
+
+
+    @Builder
+    public ReviewImage(String name, Place place, Review review) {
+        this.name = name;
+        this.place = place;
+        this.review = review;
+    }
 }

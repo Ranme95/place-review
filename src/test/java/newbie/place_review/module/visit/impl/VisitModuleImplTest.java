@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataRetrievalFailureException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ class VisitModuleImplTest {
 
         //When
         //Then
-        assertEquals(visit, visitModule.save(place, 1L, LocalDateTime.now()));
+        assertEquals(visit, visitModule.save(place, 1L, LocalDate.now()));
 
     }
 
@@ -85,10 +86,9 @@ class VisitModuleImplTest {
         Visit visit = Visit.builder()
                            .place(mock(Place.class))
                            .visitCount(1L)
-                           .date(LocalDateTime.now())
+                           .date(LocalDate.now())
                            .build();
 
-        visit.setId(1L);
 
         when(visitRepository.findById(1L)).thenReturn(Optional.of(visit));
 

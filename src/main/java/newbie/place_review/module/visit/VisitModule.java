@@ -2,15 +2,16 @@ package newbie.place_review.module.visit;
 
 import newbie.place_review.module.place.Place;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface VisitModule {
 
-    public Visit save(Place place, Long visitCount, LocalDateTime date);
+    public Visit save(Place place, Long visitCount, LocalDate date);
 
     public Optional<Visit> getById(Long visitId);
 
-    public Visit update(Long visitId,Long visitCount);
+    public Visit update(Long visitId, Long visitCount);
 
 }

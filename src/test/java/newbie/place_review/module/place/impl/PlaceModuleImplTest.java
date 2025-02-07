@@ -50,8 +50,6 @@ class PlaceModuleImplTest {
                            .coordinates(mock(Coordinates.class))
                            .build();
 
-        place.setId(1L);
-
         when(placeRepository.findById(1L)).thenReturn(Optional.of(place));
 
         // When

@@ -2,15 +2,12 @@ package newbie.place_review.module.place;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 @Embeddable
-@Data
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Coordinates {

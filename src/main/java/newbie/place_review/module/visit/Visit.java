@@ -4,27 +4,41 @@ import jakarta.persistence.*;
 import lombok.*;
 import newbie.place_review.module.place.Place;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@Builder
+
 @Entity
+@Getter
+@NoArgsConstructor
 public class Visit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "visit_id", nullable = false)
+    @Column(name = "visit_id", nullable = false, updatable = false)
     private Long id;
 
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "place_id", nullable = false)
+    @JoinColumn(name = "place_id", nullable = false, updatable = false)
     private Place place;
+
+
+    @Column(nullable = false, unique = true, updatable = false)
+    private LocalDate date;
+
 
     @Column(name = "visit_count", nullable = false)
     private Long visitCount;
 
-    @Column(nullable = false)
-    private LocalDateTime date;
+    @Builder
+    public Visit(Place place, Long visitCount, LocalDate date) {
+        this.place = place;
+        this.visitCount = visitCount;
+        this.date = date;
+    }
+
+    public void setVisitCount(@NonNull Long visitCount) {
+        this.visitCount = visitCount;
+    }
 }

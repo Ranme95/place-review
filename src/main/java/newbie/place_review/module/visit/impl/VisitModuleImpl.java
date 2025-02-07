@@ -10,6 +10,7 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ public class VisitModuleImpl implements VisitModule {
     private final VisitRepository visitRepository;
 
     @Override
-    public Visit save(@NonNull Place place,@NonNull Long visitCount,@NonNull LocalDateTime date) {
+    public Visit save(@NonNull Place place,@NonNull Long visitCount,@NonNull LocalDate date) {
         Visit visit = Visit.builder()
                            .date(date)
                            .visitCount(visitCount)

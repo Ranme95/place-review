@@ -67,13 +67,16 @@ public class PlaceModuleImpl implements PlaceModule {
     ) {
 
         return placeRepository.findById(placeId).map(place -> {
+
+            Coordinates coordinates = Coordinates.builder()
+                                                 .latitude(latitude)
+                                                 .longitude(longitude)
+                                                 .build();
+
             place.setAddress(address);
             place.setPlaceName(placeName);
+            place.setCoordinates(coordinates);
 
-            Coordinates coordinates = place.getCoordinates();
-
-            coordinates.setLatitude(latitude);
-            coordinates.setLongitude(longitude);
 
             return place;
         }).orElseThrow(() -> new DataRetrievalFailureException("수정 할 장소를 찾지 못하였습니다."));
