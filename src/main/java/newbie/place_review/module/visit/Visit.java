@@ -19,7 +19,7 @@ public class Visit {
     private Long id;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false, updatable = false)
     private Place place;
 

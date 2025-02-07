@@ -33,7 +33,8 @@ public class Place extends BaseTime {
 
     @OneToMany(
             mappedBy = "place",
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
     )
     private final List<Visit> visits = new ArrayList<>();
 

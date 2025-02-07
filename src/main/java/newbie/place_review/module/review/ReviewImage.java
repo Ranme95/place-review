@@ -11,7 +11,7 @@ import newbie.place_review.module.place.Place;
 @EqualsAndHashCode(callSuper = true)
 public class ReviewImage extends BaseTime {
 
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_image_id", nullable = false, updatable = false)
@@ -23,7 +23,7 @@ public class ReviewImage extends BaseTime {
     private Place place;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id", nullable = false, updatable = false)
     private Review review;
 
