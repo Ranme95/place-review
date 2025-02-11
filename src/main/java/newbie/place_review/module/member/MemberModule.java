@@ -3,11 +3,11 @@ package newbie.place_review.module.member;
 import java.util.Optional;
 
 public interface MemberModule {
-    public Member save(String email, String nickname);
+    public Member save(String email, String password, String nickname);
 
     public Optional<Member> getById(Long memberId);
 
     public void deleteById(Long memberId);
 
-    public Member update(Long memberId, String nickname);
+    public Member update(Long memberId, String email, String nickname, String password);
 }

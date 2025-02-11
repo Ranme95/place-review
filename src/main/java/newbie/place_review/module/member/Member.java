@@ -2,16 +2,18 @@ package newbie.place_review.module.member;
 
 import jakarta.persistence.*;
 import lombok.*;
+import newbie.place_review.common.BaseTime;
 import newbie.place_review.module.comment.Comments;
 import newbie.place_review.module.review.Review;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +25,9 @@ public class Member {
 
     @Column(nullable = false)
     private String nickname;
+
+    @Column(nullable = false)
+    private String password;
 
     @OneToMany(
             mappedBy = "member",
@@ -41,8 +46,9 @@ public class Member {
     private List<Comments> comments = new ArrayList<>();
 
     @Builder
-    public Member(String email, String nickname) {
+    public Member(String email, String password, String nickname) {
         this.email = email;
+        this.password = password;
         this.nickname = nickname;
     }
 }

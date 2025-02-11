@@ -6,6 +6,8 @@ import newbie.place_review.module.member.Member;
 import newbie.place_review.module.member.MemberModule;
 import newbie.place_review.module.member.MemberRepository;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +20,14 @@ public class MemberModuleImpl implements MemberModule {
 
     private final MemberRepository memberRepository;
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
-    public Member save(@NonNull String email, @NonNull String nickname) {
+    public Member save(@NonNull String email, @NonNull String password, @NonNull String nickname) {
+
         Member member = Member.builder()
                               .email(email)
+                              .password(passwordEncoder.encode(password))
                               .nickname(nickname)
                               .build();
 
@@ -40,10 +46,12 @@ public class MemberModuleImpl implements MemberModule {
     }
 
     @Override
-    public Member update(@NonNull Long memberId, @NonNull String nickname) {
+    public Member update(@NonNull Long memberId, @NonNull String email, @NonNull String password, @NonNull String nickname) {
 
         return memberRepository.findById(memberId).map(member -> {
             member.setNickname(nickname);
+            member.setEmail(email);
+            member.setPassword(passwordEncoder.encode(password));
 
             return member;
         }).orElseThrow(() -> new DataRetrievalFailureException("수정할 회원을 찾을 수 없습니다."));

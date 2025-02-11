@@ -2,6 +2,7 @@ package newbie.place_review.module.visit;
 
 import jakarta.persistence.*;
 import lombok.*;
+import newbie.place_review.common.BaseTime;
 import newbie.place_review.module.place.Place;
 
 import java.time.LocalDate;

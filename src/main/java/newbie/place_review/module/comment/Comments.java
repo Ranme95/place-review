@@ -2,6 +2,7 @@ package newbie.place_review.module.comment;
 
 import jakarta.persistence.*;
 import lombok.*;
+import newbie.place_review.common.BaseTime;
 import newbie.place_review.module.member.Member;
 import newbie.place_review.module.review.Review;
 import org.hibernate.annotations.Comment;
@@ -9,7 +10,7 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comments {
+public class Comments extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
