@@ -19,55 +19,64 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Profile("dev")
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity(debug = true) // 스프링 시큐리티 디버그 모드 켜기
 public class SecurityDevConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+        // 헤더나 파라미터에 있는 Csrf 토큰의 값을 다루는 핸들러
         CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
 
-        http.sessionManagement(smc -> smc.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                                         .maximumSessions(1)
-                                         .maxSessionsPreventsLogin(true)
+        // 세션관리 설정
+        http.sessionManagement(smc -> smc.sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // 항상 세션 생성
+                                         .maximumSessions(1) // 한 계정 당 최대 세션 1개로 제한
+                                         .maxSessionsPreventsLogin(true) // 최대 세션에 도달할 경우 로그인을 막음
         );
-
-        http.authorizeHttpRequests(request -> request.requestMatchers(PathRequest.toH2Console())
-                                                     .permitAll()
-                                                     .anyRequest()
-                                                     .permitAll()
+        
+        // 경로 접근 제한 설정
+        http.authorizeHttpRequests(request -> request.requestMatchers(PathRequest.toH2Console()).permitAll() // H2 콘솔 요청 허용
+                                                     .anyRequest().permitAll() // 모든 요청 허용
         );
 
         // H2 Frame 설정
         http.headers(hc -> hc.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
-        http.csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
-                                          .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                                          // h2-console에선 CSRF 안 씀
-                                          .ignoringRequestMatchers("/h2-console/**")
+        // CSRF 설정
+        http.csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler) // Csrf토큰을 다루는 핸들러 등록
+                                          .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // HttpOnly를 false로 설정, 이러면 스크립트로 쿠키 제어 가능
+                                          .ignoringRequestMatchers("/h2-console/**") // H2 Console은 제외
         );
 
-        http.httpBasic(Customizer.withDefaults());
+        // HttpBasic 인증 설정
+        http.httpBasic(Customizer.withDefaults()); // 기본 값
 
-        http.formLogin(flc -> flc.loginPage("/login")
-                                 .defaultSuccessUrl("/")
-                                 .failureUrl("/login?error")
+        // FormLogin 설정
+        http.formLogin(flc -> flc.loginPage("/login") // 로그인할 페이지 경로, 없으면 기본 폼 로그인 페이지 생성
+                                 .defaultSuccessUrl("/") // 로그인에 성공하면 이동 할 경로
+                                 .failureUrl("/login?error") // 로그인에 실패하면 이동 할 경로
         );
 
-        http.logout(logout -> logout.logoutUrl("/logout")
-                                    .logoutSuccessUrl("/login")
-                                    .invalidateHttpSession(true)
-                                    .clearAuthentication(true)
-                                    .deleteCookies("JSESSIONID")
+        // Logout 설정
+        http.logout(logout -> logout.logoutUrl("/logout") // 로그아웃 요청 경로
+                                    .logoutSuccessUrl("/login") // 로그아웃 성공하면 이동 할 경로
+                                    .invalidateHttpSession(true) // 로그아웃 시 세션 만료 시킴
+                                    .clearAuthentication(true) // 로그아웃 시 인증 제거
+                                    .deleteCookies("JSESSIONID") // 로그아웃 시 쿠키 제거
         );
 
-        http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class); // CSRF 쿠키 필터를 HttpBasic 인증 앞에 배치
 
-        return http.build();
+        return http.build(); // 설정 생성
     }
 
+    /**
+     * 패스워드 인코더 설정, 빈으로 등록된 PasswordEncoder를 사용해서 비밀번호를 확인함
+     * @return
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // DelegatingPasswordEncoder를 생성함. 얘는 알아서 암호화 방식에 맞게 비교함.
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }
