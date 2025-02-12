@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Optional;
 
@@ -23,7 +24,10 @@ public class MemberModuleImpl implements MemberModule {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public Member save(@NonNull String email, @NonNull String password, @NonNull String nickname) {
+    public Member save(@NonNull String email, String password, String nickname) {
+        Assert.notNull(email, "Email cannot be null");
+        Assert.notNull(password, "Password cannot be null");
+        Assert.notNull(nickname, "Nickname cannot be null");
 
         Member member = Member.builder()
                               .email(email)
@@ -35,7 +39,8 @@ public class MemberModuleImpl implements MemberModule {
     }
 
     @Override
-    public void deleteById(@NonNull Long memberId) {
+    public void deleteById(Long memberId) {
+        Assert.notNull(memberId, "MemberId cannot be null");
 
         Optional<Member> optMember = memberRepository.findById(memberId);
 
@@ -46,7 +51,10 @@ public class MemberModuleImpl implements MemberModule {
     }
 
     @Override
-    public Member update(@NonNull Long memberId, @NonNull String email, @NonNull String password, @NonNull String nickname) {
+    public Member update(Long memberId, String email, String password, String nickname) {
+        Assert.notNull(memberId, "MemberId cannot be null");
+        Assert.notNull(email, "Email cannot be null");
+        Assert.notNull(nickname, "Nickname cannot be null");
 
         return memberRepository.findById(memberId).map(member -> {
             member.setNickname(nickname);
@@ -58,7 +66,9 @@ public class MemberModuleImpl implements MemberModule {
     }
 
     @Override
-    public Optional<Member> getById(@NonNull Long memberId) {
+    public Optional<Member> getById(Long memberId) {
+        Assert.notNull(memberId, "MemberId cannot be null");
+
         return memberRepository.findById(memberId);
     }
 }
