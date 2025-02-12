@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,6 +8,21 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Sign In</h1>
+<header th:replace="~{fragments/global-header::globalHeader}"></header>
+<main>
+    <form th:action="@{/sign-in}" th:method="post">
+        <h2>로그인</h2>
+        <div>
+            <label for="email">이메일</label>
+            <input type="email" name="email" id="email">
+        </div>
+        <div>
+            <label for="password">비밀번호</label>
+            <input type="password" name="password" id="password">
+        </div>
+        <button type="submit">로그인</button>
+    </form>
+</main>
+<footer th:replace="~{fragments/global-footer::globalFooter}"></footer>
 </body>
 </html>

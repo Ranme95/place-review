@@ -21,17 +21,15 @@ public class MemberModuleImpl implements MemberModule {
 
     private final MemberRepository memberRepository;
 
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     @Override
-    public Member save(@NonNull String email, String password, String nickname) {
+    public Member save(String email, String password, String nickname) {
         Assert.notNull(email, "Email cannot be null");
         Assert.notNull(password, "Password cannot be null");
         Assert.notNull(nickname, "Nickname cannot be null");
 
         Member member = Member.builder()
                               .email(email)
-                              .password(passwordEncoder.encode(password))
+                              .password(password)
                               .nickname(nickname)
                               .build();
 
@@ -59,7 +57,7 @@ public class MemberModuleImpl implements MemberModule {
         return memberRepository.findById(memberId).map(member -> {
             member.setNickname(nickname);
             member.setEmail(email);
-            member.setPassword(passwordEncoder.encode(password));
+            member.setPassword(password);
 
             return member;
         }).orElseThrow(() -> new DataRetrievalFailureException("수정할 회원을 찾을 수 없습니다."));

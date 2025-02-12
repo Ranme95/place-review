@@ -2,6 +2,7 @@ package newbie.place_review.security.config;
 
 import newbie.place_review.security.filter.CsrfCookieFilter;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -16,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Profile("!dev")
 @Configuration
@@ -40,11 +42,14 @@ public class SecurityConfig {
 
         http.csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                                           .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                                          .ignoringRequestMatchers("/sign-in/**", "/sign-up/**")
         );
 
         http.httpBasic(Customizer.withDefaults());
 
         http.formLogin(flc -> flc.loginPage("/sign-in")
+                                 .usernameParameter("email")
+                                 .passwordParameter("password")
                                  .defaultSuccessUrl("/")
                                  .failureUrl("/sign-in?error")
         );
@@ -64,5 +69,15 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    /**
+     * 동시 세션 제어, 로그아웃 시 SessionInformation 정보도 삭제하도록 하기
+     *
+     * @see <a href="https://www.inflearn.com/community/questions/40072/동시-세션-제어-동일-브라우저에서-로그아웃이-정책-미적용">참고</a>
+     */
+    @Bean
+    public static ServletListenerRegistrationBean httpSessionEventPublisher() {
+        return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
     }
 }
