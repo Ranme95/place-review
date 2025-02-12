@@ -44,13 +44,13 @@ public class SecurityConfig {
 
         http.httpBasic(Customizer.withDefaults());
 
-        http.formLogin(flc -> flc.loginPage("/login")
+        http.formLogin(flc -> flc.loginPage("/sign-in")
                                  .defaultSuccessUrl("/")
-                                 .failureUrl("/login?error")
+                                 .failureUrl("/sign-in?error")
         );
 
-        http.logout(logout -> logout.logoutUrl("/logout")
-                                    .logoutSuccessUrl("/login")
+        http.logout(logout -> logout.logoutUrl("/sign-out")
+                                    .logoutSuccessUrl("/sign-in")
                                     .invalidateHttpSession(true)
                                     .clearAuthentication(true)
                                     .deleteCookies("JSESSIONID")

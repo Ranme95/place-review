@@ -52,14 +52,14 @@ public class SecurityDevConfig {
         http.httpBasic(Customizer.withDefaults()); // 기본 값
 
         // FormLogin 설정
-        http.formLogin(flc -> flc.loginPage("/login") // 로그인할 페이지 경로, 없으면 기본 폼 로그인 페이지 생성
+        http.formLogin(flc -> flc.loginPage("/sign-in") // 로그인할 페이지 경로, 없으면 기본 폼 로그인 페이지 생성
                                  .defaultSuccessUrl("/") // 로그인에 성공하면 이동 할 경로
-                                 .failureUrl("/login?error") // 로그인에 실패하면 이동 할 경로
+                                 .failureUrl("/sign-in?error") // 로그인에 실패하면 이동 할 경로
         );
 
         // Logout 설정
-        http.logout(logout -> logout.logoutUrl("/logout") // 로그아웃 요청 경로
-                                    .logoutSuccessUrl("/login") // 로그아웃 성공하면 이동 할 경로
+        http.logout(logout -> logout.logoutUrl("/sign-out") // 로그아웃 요청 경로
+                                    .logoutSuccessUrl("/sign-in") // 로그아웃 성공하면 이동 할 경로
                                     .invalidateHttpSession(true) // 로그아웃 시 세션 만료 시킴
                                     .clearAuthentication(true) // 로그아웃 시 인증 제거
                                     .deleteCookies("JSESSIONID") // 로그아웃 시 쿠키 제거
