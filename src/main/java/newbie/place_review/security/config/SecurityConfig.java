@@ -47,6 +47,7 @@ public class SecurityConfig {
         http.csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                                           .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                                           .ignoringRequestMatchers("/sign-in/**", "/sign-up/**")
+                                          .ignoringRequestMatchers("/api/v1/**")
         );
 
         http.httpBasic(Customizer.withDefaults());

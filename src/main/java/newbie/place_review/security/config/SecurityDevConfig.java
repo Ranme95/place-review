@@ -50,6 +50,7 @@ public class SecurityDevConfig {
         http.csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler) // Csrf토큰을 다루는 핸들러 등록
                                           .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // HttpOnly를 false로 설정, 이러면 스크립트로 쿠키 제어 가능
                                           .ignoringRequestMatchers("/sign-in/**", "/sign-up/**")
+                                          .ignoringRequestMatchers("/api/v1/**")
                                           .ignoringRequestMatchers("/h2-console/**") // H2 Console은 제외
         );
 
@@ -90,6 +91,7 @@ public class SecurityDevConfig {
 
     /**
      * 동시 세션 제어, 로그아웃 시 SessionInformation 정보도 삭제하도록 하기
+     *
      * @see <a href="https://www.inflearn.com/community/questions/40072/동시-세션-제어-동일-브라우저에서-로그아웃이-정책-미적용">참고</a>
      */
     @Bean
