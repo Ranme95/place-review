@@ -34,10 +34,14 @@ public class SecurityConfig {
                                          .maxSessionsPreventsLogin(true)
         );
 
-        http.authorizeHttpRequests(request -> request.requestMatchers(PathRequest.toH2Console())
-                                                     .permitAll()
-                                                     .anyRequest()
-                                                     .permitAll()
+        http.authorizeHttpRequests(request -> request.requestMatchers("/").permitAll()
+                                                     .requestMatchers("/live-chat/**").permitAll()
+                                                     .requestMatchers("/feedback/**").permitAll()
+                                                     .requestMatchers("/place/**").permitAll()
+                                                     .requestMatchers("/review/**").permitAll()
+                                                     .requestMatchers("/find/**").permitAll()
+                                                     .requestMatchers("/sign-in/**", "/sign-up/**").permitAll()
+                                                     .anyRequest().authenticated()
         );
 
         http.csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
