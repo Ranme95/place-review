@@ -41,6 +41,6 @@ public class MemberAccountApi {
 
                                return ApiResponse.of("회원 정보를 성공적으로 불러왔습니다.", HttpStatus.OK, memberDto);
                            })
-                           .orElseGet(() -> ApiResponse.of("회원 정보를 불러올 수 없습니다.", HttpStatus.NOT_FOUND, null));
+                           .orElseGet(() -> ApiResponse.of("회원 정보를 불러올 수 없습니다.", HttpStatus.NOT_FOUND, new MemberDto()));
     }
 }
