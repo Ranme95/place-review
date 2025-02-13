@@ -1,13 +1,49 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Place Review - My Account</title>
 </head>
 <body>
-<h1>My Account</h1>
+<header th:replace="~{fragments/global-header::globalHeader}"></header>
+<main>
+    <form th:action="@{/sign-up}" th:method="post">
+        <h2>정보수정</h2>
+        <div>
+            <label for="nickname">닉네임</label>
+            <input type="text" name="nickname" id="nickname" placeholder="닉네임"/>
+        </div>
+        <div>
+            <div>
+                <label for="email">이메일</label>
+                <input type="email" name="email" id="email" placeholder="이메일">
+                <button>인증</button>
+            </div>
+            <div>
+                <label for="email-auth">인증번호</label>
+                <input type="text" id="email-auth" placeholder="인증번호 입력">
+                <button>확인</button>
+            </div>
+        </div>
+        <div>
+            <label for="password">비밀번호</label>
+            <input type="password" name="password" id="password" placeholder="비밀번호"/>
+        </div>
+        <div>
+            <label for="password__check">비밀번호 확인</label>
+            <input type="password" id="password__check" placeholder="비밀번호 확인">
+        </div>
+        <div>
+            <button type="submit">수정하기</button>
+        </div>
+        <div>
+            <button type="button">뒤로가기</button>
+        </div>
+    </form>
+</main>
+<footer th:replace="~{fragments/global-footer::globalFooter}"></footer>
 </body>
 </html>

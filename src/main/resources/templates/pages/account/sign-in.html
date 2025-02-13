@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Place Review - Sign In</title>
 </head>
 <body>
 <header th:replace="~{fragments/global-header::globalHeader}"></header>
@@ -20,7 +20,9 @@
             <label for="password">비밀번호</label>
             <input type="password" name="password" id="password">
         </div>
-        <button type="submit">로그인</button>
+        <div>
+            <button type="submit">로그인</button>
+        </div>
     </form>
 </main>
 <footer th:replace="~{fragments/global-footer::globalFooter}"></footer>
