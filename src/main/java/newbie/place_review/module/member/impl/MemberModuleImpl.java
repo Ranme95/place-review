@@ -69,4 +69,11 @@ public class MemberModuleImpl implements MemberModule {
 
         return memberRepository.findById(memberId);
     }
+
+    @Override
+    public Optional<Member> getByEmail(String email) {
+        Assert.notNull(email, "Email cannot be null");
+
+        return memberRepository.findByEmail(email);
+    }
 }

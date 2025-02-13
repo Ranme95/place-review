@@ -12,14 +12,15 @@
 <main>
     <form th:action="@{/sign-up}" th:method="post">
         <h2>정보수정</h2>
+        <input th:value="${memberId}" type="text" name="memberId" hidden="hidden" disabled />
         <div>
             <label for="nickname">닉네임</label>
-            <input type="text" name="nickname" id="nickname" placeholder="닉네임"/>
+            <input th:value="${nickname}" type="text" name="nickname" id="nickname" placeholder="닉네임"/>
         </div>
         <div>
             <div>
                 <label for="email">이메일</label>
-                <input type="email" name="email" id="email" placeholder="이메일">
+                <input th:value="${email}" type="email" name="email" id="email" placeholder="이메일">
                 <button>인증</button>
             </div>
             <div>
