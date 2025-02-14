@@ -12,7 +12,7 @@
 <header th:replace="~{/fragments/global-header::globalHeader}"></header>
 <main>
     <section>
-        <form action="/search" method="get" role="search">
+        <form th:action="/search" th:method="get" role="search">
             <div>
                 <input type="search" name="search">
             </div>
