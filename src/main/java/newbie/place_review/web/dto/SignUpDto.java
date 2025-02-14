@@ -1,15 +1,17 @@
-package newbie.place_review.dto;
+package newbie.place_review.web.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
-public class EmailVerificationDto {
+public class SignUpDto {
 
     private String email;
 
-    private String verificationCode;
+    private String password;
+
+    private String nickname;
 }

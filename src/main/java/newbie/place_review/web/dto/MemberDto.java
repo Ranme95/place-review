@@ -1,4 +1,4 @@
-package newbie.place_review.dto;
+package newbie.place_review.web.dto;
 
 import lombok.*;
 

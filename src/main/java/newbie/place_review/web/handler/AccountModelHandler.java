@@ -1,7 +1,7 @@
 package newbie.place_review.web.handler;
 
 import newbie.place_review.api.ApiResponse;
-import newbie.place_review.dto.MemberDto;
+import newbie.place_review.web.dto.MemberDto;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;

@@ -3,7 +3,7 @@ package newbie.place_review.rest;
 import lombok.RequiredArgsConstructor;
 import newbie.place_review.api.ApiResponse;
 import newbie.place_review.api.VerificationApi;
-import newbie.place_review.dto.EmailVerificationDto;
+import newbie.place_review.rest.dto.EmailVerificationDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -2,10 +2,9 @@ package newbie.place_review.api;
 
 import lombok.RequiredArgsConstructor;
 import newbie.place_review.cache.CacheManager;
-import newbie.place_review.dto.MemberDto;
-import newbie.place_review.dto.SignUpDto;
+import newbie.place_review.web.dto.MemberDto;
+import newbie.place_review.web.dto.SignUpDto;
 import newbie.place_review.module.member.impl.MemberModuleImpl;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
