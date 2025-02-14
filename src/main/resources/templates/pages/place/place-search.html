@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Place Review - 해당 검색어</title>
+    <script src="https://kit.fontawesome.com/6f95c41540.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header th:replace="~{/fragments/global-header::globalHeader}"></header>
+<main>
+    <section>
+        <form action="/search" method="get" role="search">
+            <div>
+                <input type="search" name="search">
+            </div>
+            <div>
+                <button type="submit"><i class="fa-solid fa-xl fa-magnifying-glass" aria-hidden="true"></i></button>
+            </div>
+        </form>
+    </section>
+    <section>
+        <div>
+            <div>
+                <div>
+                    <img alt="이미지 없음">
+                </div>
+                <div>
+                    <a><h3>춘식이네 삼겹살</h3></a>
+                    <p>평점 : 4.7 (237) </p>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <img alt="이미지 없음">
+                </div>
+                <div>
+                    <a><h3>춘식이네 김치찌개</h3></a>
+                    <p>평점 : 4.8 (235) </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/global-footer::globalFooter}"></footer>
+</body>
+</html>
