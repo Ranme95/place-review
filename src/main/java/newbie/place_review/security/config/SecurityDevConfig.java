@@ -73,6 +73,13 @@ public class SecurityDevConfig {
                                     .deleteCookies("JSESSIONID") // 로그아웃 시 쿠키 제거
         );
 
+        // OAuth2 로그인 설정
+        http.oauth2Login(oauth2 -> oauth2.loginPage("/sign-up/options")
+                                         .defaultSuccessUrl("/")
+                                         .failureUrl("/sign-up/options")
+                                         .permitAll()
+        );
+
         http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class); // CSRF 쿠키 필터를 HttpBasic 인증 앞에 배치
 
         return http.build(); // 설정 생성

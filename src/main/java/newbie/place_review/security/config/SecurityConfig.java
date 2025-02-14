@@ -66,6 +66,13 @@ public class SecurityConfig {
                                     .deleteCookies("JSESSIONID")
         );
 
+        // OAuth2 로그인 설정
+        http.oauth2Login(oauth2 -> oauth2.loginPage("/sign-up/options")
+                                         .defaultSuccessUrl("/")
+                                         .failureUrl("/sign-up/options")
+                                         .permitAll()
+        );
+
         http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
 
         return http.build();
