@@ -1,6 +1,7 @@
 package newbie.place_review.api;
 
 import lombok.RequiredArgsConstructor;
+import newbie.place_review.cache.CacheManager;
 import newbie.place_review.dto.MemberDto;
 import newbie.place_review.dto.SignUpDto;
 import newbie.place_review.module.member.impl.MemberModuleImpl;
@@ -18,8 +19,16 @@ public class MemberAccountApi {
 
     private final MemberModuleImpl memberModule;
 
+    private final CacheManager cacheManager;
+
     public ApiResponse<Void> signUp(SignUpDto signUpDto) {
+
         String email = signUpDto.getEmail();
+
+        if (cacheManager.get("!" + email) == null) {
+            return ApiResponse.of("인증되지 않은 이메일입니다.", HttpStatus.BAD_REQUEST);
+        }
+
         String nickname = signUpDto.getNickname();
         String password = passwordEncoder.encode(signUpDto.getPassword());
 

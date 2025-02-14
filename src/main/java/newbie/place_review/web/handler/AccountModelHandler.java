@@ -17,8 +17,14 @@ public class AccountModelHandler {
             model.addAttribute("memberId", memberDto.getMemberId());
             model.addAttribute("email", memberDto.getEmail());
             model.addAttribute("nickname", memberDto.getNickname());
-        } else if(apiResponse.getHttpStatus().is4xxClientError()) {
+        } else if (apiResponse.getHttpStatus().isError()) {
             redirectAttributes.addAttribute("message", apiResponse.getMessage());
+        }
+    }
+
+    public void handleSignUpView(ApiResponse<Void> apiResponse, RedirectAttributes redirectAttributes) {
+        if (apiResponse.getHttpStatus().isError()) {
+            redirectAttributes.addFlashAttribute("errorMessage", apiResponse.getMessage());
         }
     }
 }

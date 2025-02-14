@@ -32,7 +32,7 @@ public class AccountController {
 
         accountModelHandler.handleMyAccountView(apiResponse, model, redirectAttributes);
 
-        if (apiResponse.getHttpStatus().is4xxClientError()) {
+        if (apiResponse.getHttpStatus().isError()) {
             return "redirect:/feedback";
         }
 
@@ -50,8 +50,14 @@ public class AccountController {
     }
 
     @PostMapping("/sign-up")
-    public String processSignUp(SignUpDto signUpDto) {
-        memberAccountApi.signUp(signUpDto);
+    public String processSignUp(SignUpDto signUpDto, RedirectAttributes redirectAttributes) {
+        ApiResponse<Void> apiResponse = memberAccountApi.signUp(signUpDto);
+
+        accountModelHandler.handleSignUpView(apiResponse, redirectAttributes);
+
+        if(apiResponse.getHttpStatus().isError()) {
+            return "redirect:/sign-up";
+        }
 
         return "redirect:/sign-in";
     }

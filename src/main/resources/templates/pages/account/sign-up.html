@@ -10,6 +10,9 @@
 <body>
 <header th:replace="~{fragments/global-header::globalHeader}"></header>
 <main>
+    <div th:if="${errorMessage}">
+        <h3 th:text="${errorMessage}"></h3>
+    </div>
     <form th:action="@{/sign-up}" th:method="post">
         <h2>회원가입</h2>
         <div>
