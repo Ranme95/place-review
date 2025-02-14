@@ -20,12 +20,12 @@
             <div>
                 <label for="email">이메일</label>
                 <input type="email" name="email" id="email">
-                <button>인증</button>
+                <button id="email-verification-btn" type="button">인증</button>
             </div>
-            <div>
-                <label for="email-auth">인증번호</label>
-                <input type="text" id="email-auth" placeholder="인증번호 입력">
-                <button>확인</button>
+            <div id="email-verification-code-con" hidden="hidden">
+                <label for="email-verification-code">인증번호</label>
+                <input type="text" id="email-verification-code" placeholder="인증번호 입력">
+                <button id="email-verification-code-btn" type="button">확인</button>
             </div>
         </div>
         <div>
@@ -42,5 +42,6 @@
     </form>
 </main>
 <footer th:replace="~{fragments/global-footer::globalFooter}"></footer>
+<script th:src="@{/assets/js/email-verification.js}"></script>
 </body>
 </html>

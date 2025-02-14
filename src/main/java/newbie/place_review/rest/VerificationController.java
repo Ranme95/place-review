@@ -3,11 +3,9 @@ package newbie.place_review.rest;
 import lombok.RequiredArgsConstructor;
 import newbie.place_review.api.ApiResponse;
 import newbie.place_review.api.VerificationApi;
+import newbie.place_review.dto.EmailVerificationDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -17,17 +15,21 @@ public class VerificationController {
     private final VerificationApi verificationApi;
 
     @PostMapping("/verification/email")
-    public ResponseEntity<ApiResponse<Void>> processEmailVerification(@RequestParam("email") String email) {
+    public ResponseEntity<ApiResponse<Void>> processEmailVerification(@RequestBody EmailVerificationDto emailVerificationDto) {
+
+        String email = emailVerificationDto.getEmail();
+
         ApiResponse<Void> apiResponse = verificationApi.processEmailVerification(email);
 
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
     @PostMapping("/verification/email/check")
-    public ResponseEntity<ApiResponse<Boolean>> checkEmailVerification(
-            @RequestParam("email") String email,
-            @RequestParam("verificationCode") String verificationCode
-    ) {
+    public ResponseEntity<ApiResponse<Boolean>> checkEmailVerification(@RequestBody EmailVerificationDto emailVerificationDto) {
+
+        String email = emailVerificationDto.getEmail();
+        String verificationCode = emailVerificationDto.getVerificationCode();
+
         ApiResponse<Boolean> apiResponse = verificationApi.checkEmailVerificationCode(email, verificationCode);
 
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
