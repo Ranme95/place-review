@@ -5,8 +5,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import newbie.place_review.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -19,18 +18,15 @@ import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @Service
+@RequiredArgsConstructor
 public class VerificationApi {
 
     private final JavaMailSender javaMailSender;
+    private final CacheManager cacheManager;
 
-    private final ValueOperations<String, Object> valueOperations;
 
-    private final int EMAIL_VERIFICATION_TIMEOUT = 300;
-
-    public VerificationApi(JavaMailSender javaMailSender, RedisTemplate<String, Object> redisTemplate) {
-        this.javaMailSender = javaMailSender;
-        this.valueOperations = redisTemplate.opsForValue();
-    }
+    private final long EMAIL_VERIFICATION_TIMEOUT = 300;
+    private final long VERIFIED_EMAIL_TIMEOUT = 30;
 
     /**
      * @param email
@@ -40,16 +36,10 @@ public class VerificationApi {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         String verificationCode = getVerificationCode();
-        String verificationCodeHtml = createVerificationCodeHtml(verificationCode);
-
-        storeEmailAndVerificationCode(email, verificationCode);
+        cacheEmailAndVerificationCode(email, verificationCode);
 
         try {
-            message.setSubject("[Place Review] 이메일 인증코드");
-            message.setSentDate(Date.valueOf(LocalDate.now()));
-            message.addRecipients(Message.RecipientType.TO, email);
-            message.setText(verificationCodeHtml, "utf-8", "html");
-
+            configVerificationCodeMessage(message, email, verificationCode);
             javaMailSender.send(message);
 
             return ApiResponse.of("인증코드가 전송 되었습니다.", HttpStatus.CREATED);
@@ -64,15 +54,15 @@ public class VerificationApi {
      * @return 인증코드 불일치: 401 Unauthorized<br>인증 성공: 200 OK<br>인증 진행 상태 아님: 400 Bad Request
      */
     public ApiResponse<Boolean> checkEmailVerificationCode(String email, String verificationCode) {
-        Optional<String> optVerificationCode = Optional.ofNullable((String) valueOperations.get(email));
+        Optional<String> optVerificationCode = Optional.ofNullable((String) cacheManager.get(email));
 
         return optVerificationCode.map(storedVerificationCode -> {
                                       if (!storedVerificationCode.equals(verificationCode)) {
                                           return ApiResponse.of("인증코드가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED, false);
                                       }
 
-                                      valueOperations.getAndDelete(email);
-                                      successfulEmailVerification(email);
+                                      cacheManager.getAndDelete(email);
+                                      completeEmailVerification(email);
 
                                       return ApiResponse.of("이메일 인증 완료", HttpStatus.OK, true);
                                   })
@@ -83,12 +73,20 @@ public class VerificationApi {
         Random random = new Random();
 
         StringBuilder stringBuilder = new StringBuilder();
-
         for (int i = 0; i < 6; i++) {
             stringBuilder.append(random.nextInt(10));
         }
 
         return stringBuilder.toString();
+    }
+
+    private void configVerificationCodeMessage(MimeMessage message, String to, String verificationCode) throws MessagingException {
+        String verificationCodeHtml = createVerificationCodeHtml(verificationCode);
+
+        message.setSubject("[Place Review] 이메일 인증코드");
+        message.setSentDate(Date.valueOf(LocalDate.now()));
+        message.addRecipients(Message.RecipientType.TO, to);
+        message.setText(verificationCodeHtml, "utf-8", "html");
     }
 
     private String createVerificationCodeHtml(String verificationCode) {
@@ -101,11 +99,11 @@ public class VerificationApi {
         return stringBuilder.toString();
     }
 
-    private void storeEmailAndVerificationCode(String email, Object verificationCode) {
-        valueOperations.set(email, verificationCode, EMAIL_VERIFICATION_TIMEOUT, TimeUnit.SECONDS);
+    private void cacheEmailAndVerificationCode(String email, Object verificationCode) {
+        cacheManager.set(email, verificationCode, EMAIL_VERIFICATION_TIMEOUT, TimeUnit.SECONDS);
     }
 
-    private void successfulEmailVerification(String email) {
-        valueOperations.set("!" + email, "verified", 30, TimeUnit.MINUTES);
+    private void completeEmailVerification(String email) {
+        cacheManager.set("!" + email, "verified", VERIFIED_EMAIL_TIMEOUT, TimeUnit.MINUTES);
     }
 }
